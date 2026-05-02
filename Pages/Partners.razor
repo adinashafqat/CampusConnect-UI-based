@@ -1,0 +1,150 @@
+@page "/partners"
+@layout MainLayout
+@inject AppStateService State
+@implements IDisposable
+
+<div class="topbar">
+    <div>
+        <div class="topbar-title">Find Study Partners</div>
+        <div class="topbar-sub">AI-powered matching based on dept, year, subjects & availability</div>
+    </div>
+</div>
+
+<div class="page-body">
+
+    @if (!State.IsLoggedIn)
+    {
+        <div class="card">
+            <div class="card-body" style="text-align:center;padding:48px">
+                <div class="section-title" style="margin-bottom:8px">Sign In to Find Partners</div>
+                <p style="color:var(--text-soft);font-size:14px;margin-bottom:20px">
+                    The partner-matching algorithm needs to know who you are to find compatible study buddies.
+                </p>
+                <div class="alert alert-info" style="max-width:400px;margin:0 auto">
+                    Use the <strong>Sign In</strong> button in the sidebar to get started.
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+            var me = State.Students.FirstOrDefault(s => s.Email == State.CurrentUser!.Email);
+       
+
+        @if (me != null)
+        {
+            <div class="card" style="margin-bottom:24px">
+                <div class="card-header">
+                    <div class="card-title">Your Profile</div>
+                    <span style="font-size:12px;color:var(--text-soft)">Used for matching</span>
+                </div>
+                <div class="card-body">
+                    <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+                        <div class="user-avatar" style="width:52px;height:52px;font-size:22px;background:var(--blue-deep)">
+                            @me.Initial
+                        </div>
+                        <div>
+                            <div style="font-family:'Sora',sans-serif;font-size:16px;font-weight:700">@me.Name</div>
+                            <div style="font-size:13px;color:var(--text-soft)">
+                                <span class="badge badge-blue" style="margin-right:6px">@me.Department</span>
+                                Year @me.Year &nbsp;·&nbsp; @me.FreeTime
+                            </div>
+                        </div>
+                        <div style="margin-left:auto">
+                            <div style="font-size:12px;color:var(--text-soft);margin-bottom:6px">Subjects</div>
+                            @foreach (var sub in me.Subjects)
+                            {
+                                <span class="tag">@sub</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="card" style="margin-bottom:24px;border-left:4px solid var(--blue-bright)">
+            <div class="card-body" style="padding:16px 20px">
+                <div style="font-weight:600;margin-bottom:8px;font-size:13px">📊 How the Matching Score Works</div>
+                <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--text-soft)">
+                    <span>Same Department <strong style="color:var(--blue-deep)">+30 pts</strong></span>
+                    <span>Same Year <strong style="color:var(--blue-deep)">+20 pts</strong></span>
+                    <span>Matching Free Time <strong style="color:var(--blue-deep)">+25 pts</strong></span>
+                    <span>Per Shared Subject <strong style="color:var(--blue-deep)">+10 pts</strong></span>
+                    <span>Per Shared Interest <strong style="color:var(--blue-deep)">+5 pts</strong></span>
+                </div>
+            </div>
+        </div>
+
+        
+            var matches = State.FindPartners();
+        
+
+        <div class="section-heading">
+            <div>
+                <div class="section-title">Top Matches</div>
+                <div class="section-sub">
+                    @(matches.Any() ? $"Found {matches.Count} compatible partner{(matches.Count == 1 ? "" : "s")}" : "No matches found yet")
+                </div>
+            </div>
+        </div>
+
+        @if (!matches.Any())
+        {
+            <div class="empty-state">
+                <div class="empty-text">No matches found</div>
+                <div class="empty-sub">Add more students to the directory to find study partners</div>
+            </div>
+        }
+        else
+        {
+            int rank = 1;
+            @foreach (var m in matches)
+            {
+                int pct = Math.Min(m.Score, 100);
+                <div class="match-card">
+                    <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:700;color:var(--text-muted);width:28px">
+                        #@rank
+                    </div>
+                    <div class="match-avatar">@m.Student.Initial</div>
+                    <div style="flex:1">
+                        <div style="font-weight:600;font-size:15px">@m.Student.Name</div>
+                        <div style="font-size:12px;color:var(--text-soft);margin-bottom:6px">
+                            <span class="badge badge-blue">@m.Student.Department</span>
+                            &nbsp; Year @m.Student.Year &nbsp;·&nbsp; ⏰ @m.Student.FreeTime
+                        </div>
+                        <div>
+                            @foreach (var sub in m.Student.Subjects)
+                            {
+                                <span class="tag">@sub</span>
+                            }
+                        </div>
+                        <div class="score-bar-wrap" style="margin-top:8px">
+                            <div class="score-bar" style="width:@pct%"></div>
+                        </div>
+                    </div>
+                    <div style="text-align:right;flex-shrink:0">
+                        <div class="match-score">@m.Score</div>
+                        <div class="match-score-label">match pts</div>
+                        <span class="badge @(m.Score >= 80 ? "badge-green" : m.Score >= 50 ? "badge-blue" : "badge-amber")"
+                              style="margin-top:4px">
+                            @(m.Score >= 80 ? "Excellent" : m.Score >= 50 ? "Good" : "Fair")
+                        </span>
+                    </div>
+                </div>
+                rank++;
+            }
+        }
+    }
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        State.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        State.OnChange -= StateHasChanged;
+    }
+}

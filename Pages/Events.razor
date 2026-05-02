@@ -1,0 +1,194 @@
+@page "/events"
+@layout MainLayout
+@inject AppStateService State
+@implements IDisposable
+
+<div class="topbar">
+    <div>
+        <div class="topbar-title">Events</div>
+        <div class="topbar-sub">@State.Events.Count upcoming campus event@(State.Events.Count == 1 ? "" : "s")</div>
+    </div>
+    <div class="topbar-actions">
+        @if (State.IsAdmin)
+        {
+            <button class="btn btn-white" @onclick="ToggleAddForm">
+                @(showAddForm ? "Close" : "Add Event")
+            </button>
+        }
+    </div>
+</div>
+
+<div class="page-body">
+
+    @if (!string.IsNullOrEmpty(message))
+    {
+        <div class="alert @(isError ? "alert-error" : "alert-success")">@message</div>
+    }
+
+    @if (showAddForm && State.IsAdmin)
+    {
+        <div class="card" style="margin-bottom:24px;border:2px solid var(--blue-pale)">
+            <div class="card-header">
+                <div class="card-title">Publish New Event</div>
+            </div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Event Title *</label>
+                        <input class="form-control" @bind="newTitle" placeholder="e.g. Tech Symposium 2026" />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Organizer</label>
+                        <input class="form-control" @bind="newOrg" placeholder="CS Department" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Date *</label>
+                        <input class="form-control" type="date" @bind="newDate" />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Time</label>
+                        <select class="form-control" @bind="newTime">
+                            <option value="9:00 AM">9:00 AM</option>
+                            <option value="10:00 AM">10:00 AM</option>
+                            <option value="12:00 PM">12:00 PM</option>
+                            <option value="2:00 PM">2:00 PM</option>
+                            <option value="4:00 PM">4:00 PM</option>
+                            <option value="6:00 PM">6:00 PM</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Location</label>
+                    <select class="form-control" @bind="newLocationName">
+                        @if (State.Locations != null)
+                        {
+                            @foreach (var loc in State.Locations)
+                            {
+                                <option value="@loc.Name">@loc.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-control" rows="3" @bind="newDesc"
+                              placeholder="Brief description of the event..."></textarea>
+                </div>
+                <div style="display:flex;gap:10px">
+                    <button class="btn btn-primary" @onclick="PublishEvent">🎉 Publish Event</button>
+                    <button class="btn btn-ghost" @onclick="() => showAddForm = false">Cancel</button>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (State.Events == null || !State.Events.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-text">No events scheduled</div>
+            <div class="empty-sub">
+                @(State.IsAdmin ? "Use the button above to publish an event" : "Check back later for upcoming events")
+            </div>
+        </div>
+    }
+    else
+    {
+        @foreach (var ev in State.Events.OrderBy(e => e.Date))
+        {
+            var d = DateTime.TryParse(ev.Date, out var dt) ? dt : DateTime.Today;
+
+            <div class="event-card">
+                <div class="event-date-box">
+                    <div class="event-month">@d.ToString("MMM")</div>
+                    <div class="event-day">@d.Day</div>
+                </div>
+                <div class="event-info" style="flex:1">
+                    <div class="event-title">@ev.Title</div>
+                    <div class="event-meta">
+                        @ev.Time &nbsp;·&nbsp; @ev.LocationName &nbsp;·&nbsp; @ev.Organizer
+                    </div>
+                    <div class="event-desc">@ev.Description</div>
+                </div>
+                @if (State.IsAdmin)
+                {
+                    <button class="btn btn-danger btn-sm" @onclick="() => RemoveEvent(ev.EventId)">
+                        Remove
+                    </button>
+                }
+            </div>
+        }
+    }
+</div>
+
+@code {
+    private bool showAddForm = false;
+    private string message = "";
+    private string newTitle = "";
+    private string newOrg = "";
+    private string newTime = "10:00 AM";
+    private string newDesc = "";
+    private string newLocationName = "";
+    private DateTime newDate = DateTime.Today;
+    private bool isError = false;
+
+    protected override void OnInitialized()
+    {
+        State.OnChange += StateHasChanged;
+
+        if (State.Locations?.Any() == true)
+        {
+            newLocationName = State.Locations.First().Name;
+        }
+    }
+
+    public void Dispose()
+    {
+        State.OnChange -= StateHasChanged;
+    }
+
+    private void ToggleAddForm()
+    {
+        showAddForm = !showAddForm;
+        message = "";
+    }
+
+    private void PublishEvent()
+    {
+        if (string.IsNullOrWhiteSpace(newTitle))
+        {
+            message = "Event title is required.";
+            isError = true;
+            return;
+        }
+
+        try
+        {
+            string dateStr = newDate.ToString("yyyy-MM-dd");
+
+            State.AddEvent(newTitle, newDesc, dateStr, newTime, newLocationName, newOrg);
+
+            message = $"🎉 \"{newTitle}\" has been published!";
+            isError = false;
+
+            newTitle = "";
+            newOrg = "";
+            newDesc = "";
+            newDate = DateTime.Today;
+            showAddForm = false;
+        }
+        catch (Exception ex)
+        {
+            message = $"Error: {ex.Message}";
+            isError = true;
+        }
+    }
+
+    private void RemoveEvent(int id)
+    {
+        State.RemoveEvent(id);
+        message = "Event removed successfully.";
+        isError = false;
+    }
+}

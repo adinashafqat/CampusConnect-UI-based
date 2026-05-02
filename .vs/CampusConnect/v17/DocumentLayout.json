@@ -1,0 +1,197 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\campus\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{FD2823FE-E8B3-03C7-4211-533230AEF8E0}|CampusConnect.csproj|d:\\campus\\pages\\partners.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{FD2823FE-E8B3-03C7-4211-533230AEF8E0}|CampusConnect.csproj|solutionrelative:pages\\partners.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FD2823FE-E8B3-03C7-4211-533230AEF8E0}|CampusConnect.csproj|d:\\campus\\pages\\bookings.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{FD2823FE-E8B3-03C7-4211-533230AEF8E0}|CampusConnect.csproj|solutionrelative:pages\\bookings.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FD2823FE-E8B3-03C7-4211-533230AEF8E0}|CampusConnect.csproj|d:\\campus\\pages\\events.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{FD2823FE-E8B3-03C7-4211-533230AEF8E0}|CampusConnect.csproj|solutionrelative:pages\\events.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FD2823FE-E8B3-03C7-4211-533230AEF8E0}|CampusConnect.csproj|d:\\campus\\wwwroot\\css\\app.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{FD2823FE-E8B3-03C7-4211-533230AEF8E0}|CampusConnect.csproj|solutionrelative:wwwroot\\css\\app.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FD2823FE-E8B3-03C7-4211-533230AEF8E0}|CampusConnect.csproj|d:\\campus\\components\\layout\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{FD2823FE-E8B3-03C7-4211-533230AEF8E0}|CampusConnect.csproj|solutionrelative:components\\layout\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FD2823FE-E8B3-03C7-4211-533230AEF8E0}|CampusConnect.csproj|d:\\campus\\pages\\index.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{FD2823FE-E8B3-03C7-4211-533230AEF8E0}|CampusConnect.csproj|solutionrelative:pages\\index.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FD2823FE-E8B3-03C7-4211-533230AEF8E0}|CampusConnect.csproj|d:\\campus\\pages\\activitylogs.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{FD2823FE-E8B3-03C7-4211-533230AEF8E0}|CampusConnect.csproj|solutionrelative:pages\\activitylogs.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FD2823FE-E8B3-03C7-4211-533230AEF8E0}|CampusConnect.csproj|d:\\campus\\app.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{FD2823FE-E8B3-03C7-4211-533230AEF8E0}|CampusConnect.csproj|solutionrelative:app.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FD2823FE-E8B3-03C7-4211-533230AEF8E0}|CampusConnect.csproj|d:\\campus\\pages\\students.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{FD2823FE-E8B3-03C7-4211-533230AEF8E0}|CampusConnect.csproj|solutionrelative:pages\\students.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FD2823FE-E8B3-03C7-4211-533230AEF8E0}|CampusConnect.csproj|d:\\campus\\models\\models.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FD2823FE-E8B3-03C7-4211-533230AEF8E0}|CampusConnect.csproj|solutionrelative:models\\models.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 7,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "app.css",
+              "DocumentMoniker": "D:\\campus\\wwwroot\\css\\app.css",
+              "RelativeDocumentMoniker": "wwwroot\\css\\app.css",
+              "ToolTip": "D:\\campus\\wwwroot\\css\\app.css",
+              "RelativeToolTip": "wwwroot\\css\\app.css",
+              "ViewState": "AgIAAN0BAAAAAAAAAAAAAO4BAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-05-02T10:08:40.498Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "MainLayout.razor",
+              "DocumentMoniker": "D:\\campus\\Components\\Layout\\MainLayout.razor",
+              "RelativeDocumentMoniker": "Components\\Layout\\MainLayout.razor",
+              "ToolTip": "D:\\campus\\Components\\Layout\\MainLayout.razor",
+              "RelativeToolTip": "Components\\Layout\\MainLayout.razor",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAIwD4AAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-23T13:29:35.197Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ActivityLogs.razor",
+              "DocumentMoniker": "D:\\campus\\Pages\\ActivityLogs.razor",
+              "RelativeDocumentMoniker": "Pages\\ActivityLogs.razor",
+              "ToolTip": "D:\\campus\\Pages\\ActivityLogs.razor",
+              "RelativeToolTip": "Pages\\ActivityLogs.razor",
+              "ViewState": "AgIAAFoAAAAAAAAAAAAAAFEAAABAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-23T11:13:05.59Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Events.razor",
+              "DocumentMoniker": "D:\\campus\\Pages\\Events.razor",
+              "RelativeDocumentMoniker": "Pages\\Events.razor",
+              "ToolTip": "D:\\campus\\Pages\\Events.razor",
+              "RelativeToolTip": "Pages\\Events.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-23T11:10:04.824Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Index.razor",
+              "DocumentMoniker": "D:\\campus\\Pages\\Index.razor",
+              "RelativeDocumentMoniker": "Pages\\Index.razor",
+              "ToolTip": "D:\\campus\\Pages\\Index.razor",
+              "RelativeToolTip": "Pages\\Index.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-23T11:06:23.638Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Partners.razor",
+              "DocumentMoniker": "D:\\campus\\Pages\\Partners.razor",
+              "RelativeDocumentMoniker": "Pages\\Partners.razor",
+              "ToolTip": "D:\\campus\\Pages\\Partners.razor",
+              "RelativeToolTip": "Pages\\Partners.razor",
+              "ViewState": "AgIAADMAAAAAAAAAAAAAAJYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-23T11:01:08.707Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Bookings.razor",
+              "DocumentMoniker": "D:\\campus\\Pages\\Bookings.razor",
+              "RelativeDocumentMoniker": "Pages\\Bookings.razor",
+              "ToolTip": "D:\\campus\\Pages\\Bookings.razor",
+              "RelativeToolTip": "Pages\\Bookings.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAIwBEAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-23T11:02:45.25Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Students.razor",
+              "DocumentMoniker": "D:\\campus\\Pages\\Students.razor",
+              "RelativeDocumentMoniker": "Pages\\Students.razor",
+              "ToolTip": "D:\\campus\\Pages\\Students.razor",
+              "RelativeToolTip": "Pages\\Students.razor",
+              "ViewState": "AgIAAMwAAAAAAAAAAAAAABsAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-23T13:31:16.566Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Models.cs",
+              "DocumentMoniker": "D:\\campus\\Models\\Models.cs",
+              "RelativeDocumentMoniker": "Models\\Models.cs",
+              "ToolTip": "D:\\campus\\Models\\Models.cs",
+              "RelativeToolTip": "Models\\Models.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAAnwCIAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-23T13:32:26.555Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "App.razor",
+              "DocumentMoniker": "D:\\campus\\App.razor",
+              "RelativeDocumentMoniker": "App.razor",
+              "ToolTip": "D:\\campus\\App.razor",
+              "RelativeToolTip": "App.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-23T13:38:58.068Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

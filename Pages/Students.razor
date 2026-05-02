@@ -1,0 +1,216 @@
+
+@page "/students"
+@layout MainLayout
+@inject AppStateService State
+@implements IDisposable
+
+<div class="topbar">
+    <div>
+        <div class="topbar-title">Students</div>
+        <div class="topbar-sub">@State.TotalStudents student@(State.TotalStudents == 1 ? "" : "s") registered</div>
+    </div>
+    <div class="topbar-actions">
+        @if (State.IsAdmin)
+        {
+            <button class="btn btn-white" @onclick="() => showAddModal = true">+ Add Student</button>
+        }
+    </div>
+</div>
+
+<div class="page-body">
+
+    @if (!string.IsNullOrEmpty(successMsg))
+    {
+        <div class="alert alert-success">@successMsg</div>
+    }
+    @if (!string.IsNullOrEmpty(errorMsg))
+    {
+        <div class="alert alert-error"> @errorMsg</div>
+    }
+
+    <div style="margin-bottom:18px;display:flex;gap:12px;align-items:center">
+        <input class="form-control" style="max-width:320px"
+               placeholder="Search by name, email or department..."
+               @bind="searchQuery" @bind:event="oninput" />
+        <span style="font-size:13px;color:var(--text-soft)">
+            Showing @FilteredStudents.Count result@(FilteredStudents.Count == 1 ? "" : "s")
+        </span>
+    </div>
+
+    <div class="card">
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Department</th>
+                        <th>Year</th>
+                        <th>Free Time</th>
+                        <th>Subjects</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!FilteredStudents.Any())
+                    {
+                        <tr>
+                            <td colspan="7">
+                                <div class="empty-state">
+                                    <div class="empty-text">No students found</div>
+                                    <div class="empty-sub">Try a different search term</div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var s in FilteredStudents)
+                        {
+                            <tr>
+                                <td><strong>#@s.Id</strong></td>
+                                <td>
+                                    <div style="display:flex;align-items:center;gap:10px">
+                                        <div class="user-avatar" style="width:30px;height:30px;font-size:12px">
+                                            @s.Initial
+                                        </div>
+                                        @s.Name
+                                    </div>
+                                </td>
+                                <td style="color:var(--text-soft)">@s.Email</td>
+                                <td><span class="badge badge-blue">@s.Department</span></td>
+                                <td>Year @s.Year</td>
+                                <td style="font-size:12px;color:var(--text-soft)">@s.FreeTime</td>
+                                <td>
+                                    @foreach (var sub in s.Subjects)
+                                    {
+                                        <span class="tag">@sub</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@if (showAddModal)
+{
+    <div class="modal-overlay" @onclick="CloseModal">
+        <div class="modal-box" @onclick:stopPropagation>
+            <div class="modal-title">➕ Add Student</div>
+
+            @if (!string.IsNullOrEmpty(modalError))
+            {
+                <div class="alert alert-error">⚠️ @modalError</div>
+            }
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Full Name *</label>
+                    <input class="form-control" @bind="newName" placeholder="Jane Doe" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Student ID *</label>
+                    <input class="form-control" type="number" @bind="newId" placeholder="20001" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Email *</label>
+                <input class="form-control" type="email" @bind="newEmail" placeholder="student@uni.edu" />
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Department</label>
+                    <select class="form-control" @bind="newDept">
+                        <option value="CS">CS</option>
+                        <option value="EE">EE</option>
+                        <option value="Math">Math</option>
+                        <option value="Physics">Physics</option>
+                        <option value="MBA">MBA</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Year</label>
+                    <select class="form-control" @bind="newYear">
+                        <option value="1">Year 1</option>
+                        <option value="2">Year 2</option>
+                        <option value="3">Year 3</option>
+                        <option value="4">Year 4</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Free Time</label>
+                <select class="form-control" @bind="newFreeTime">
+                    <option value="Mon 2-4pm">Mon 2–4pm</option>
+                    <option value="Tue 3-5pm">Tue 3–5pm</option>
+                    <option value="Wed 1-3pm">Wed 1–3pm</option>
+                    <option value="Thu 4-6pm">Thu 4–6pm</option>
+                    <option value="Fri 1-3pm">Fri 1–3pm</option>
+                </select>
+            </div>
+
+            <div style="display:flex;gap:10px;margin-top:8px">
+                <button class="btn btn-primary" @onclick="AddStudent">✅ Register Student</button>
+                <button class="btn btn-ghost" @onclick="CloseModal">Cancel</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    string searchQuery = "";
+    bool showAddModal = false;
+    string successMsg = "", errorMsg = "", modalError = "";
+
+    string newName = "", newEmail = "", newDept = "CS", newFreeTime = "Mon 2-4pm";
+    int newId = 0, newYear = 1;
+
+    List<Student> FilteredStudents =>
+        State.Students
+             .Where(s => string.IsNullOrWhiteSpace(searchQuery) ||
+                         s.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+                         s.Email.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+                         s.Department.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
+             .ToList();
+
+    protected override void OnInitialized()
+    {
+        State.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        State.OnChange -= StateHasChanged;
+    }
+
+    void AddStudent()
+    {
+        modalError = "";
+        if (string.IsNullOrWhiteSpace(newName) || string.IsNullOrWhiteSpace(newEmail) || newId == 0)
+        {
+            modalError = "Please fill in all required fields.";
+            return;
+        }
+
+        if (State.AddStudent(newId, newName, newEmail, newDept, newYear, newFreeTime))
+        {
+            successMsg = $"{newName} has been added to the directory.";
+            CloseModal();
+        }
+        else
+        {
+            modalError = "Student ID or email already exists.";
+        }
+    }
+
+    void CloseModal()
+    {
+        showAddModal = false;
+        modalError = "";
+        newName = ""; newEmail = ""; newId = 0; newYear = 1;
+    }
+}

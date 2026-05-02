@@ -1,0 +1,93 @@
+@page "/admin/logs"
+@layout MainLayout
+@inject AppStateService State
+@inject NavigationManager Nav
+@implements IDisposable
+
+@code {
+    protected override void OnInitialized()
+    {
+        State.OnChange += StateHasChanged;
+        if (!State.IsAdmin)
+            Nav.NavigateTo("/");
+    }
+
+    public void Dispose()
+    {
+        State.OnChange -= StateHasChanged;
+    }
+
+    string GetActionBadge(string action) => action switch
+    {
+        "login"       => "badge-green",
+        "admin-login" => "badge-purple",
+        "logout"      => "badge-blue",
+        "register"    => "badge-green",
+        "booking"     => "badge-blue",
+        "add-event"   => "badge-amber",
+        _             => "badge-blue"
+    };
+
+   
+}
+
+<div class="topbar">
+    <div>
+        <div class="topbar-title">📋 Activity Logs</div>
+        <div class="topbar-sub">@State.Logs.Count log entries recorded</div>
+    </div>
+    <div class="topbar-actions">
+        <span class="badge" style="background:rgba(255,255,255,0.15);color:#fff;padding:6px 14px">
+            🛡️ Admin Only
+        </span>
+    </div>
+</div>
+
+<div class="page-body">
+
+    <div class="card">
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>User</th>
+                        <th>Action</th>
+                        <th>Detail</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!State.Logs.Any())
+                    {
+                        <tr>
+                            <td colspan="4">
+                                <div class="empty-state">
+                                    <div class="empty-text">No activity yet</div>
+                                    <div class="empty-sub">User actions will appear here</div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var log in ((IEnumerable<LogEntry>)State.Logs).Reverse())
+                        {
+                            <tr>
+                                <td style="font-size:12px;color:var(--text-soft);font-family:monospace">
+                                    @log.Timestamp
+                                </td>
+                                <td style="font-size:13px">@log.UserId</td>
+                                <td>
+                                    <span class="badge @GetActionBadge(log.Action)">
+                                        (log.Action) @log.Action
+                                    </span>
+                                </td>
+                                <td style="font-size:13px;color:var(--text-soft)">@log.Detail</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

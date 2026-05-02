@@ -1,0 +1,243 @@
+@page "/bookings"
+@layout MainLayout
+@inject AppStateService State
+@implements IDisposable
+
+<div class="topbar">
+    <div>
+        <div class="topbar-title">Room Bookings</div>
+        <div class="topbar-sub">@MyBookings.Count total booking@(MyBookings.Count == 1 ? "" : "s")</div>
+    </div>
+</div>
+
+<div class="page-body">
+
+    @if (!State.IsLoggedIn)
+    {
+        <div class="alert alert-info">
+            Please sign in to book rooms or view your bookings.
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(message))
+    {
+        <div class="alert @(messageType == "success" ? "alert-success" : "alert-error")">
+            @message
+        </div>
+    }
+
+    @if (State.IsLoggedIn)
+    {
+        <div class="card" style="margin-bottom:24px">
+            <div class="card-header">
+                <div class="card-title">Book a Room</div>
+            </div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Location</label>
+                        <select class="form-control" @bind="selectedLocation">
+                            @if (State.Locations != null)
+                            {
+                                @foreach (var loc in State.Locations.Where(l => l.Capacity > 0))
+                                {
+                                    <option value="@loc.Id"> @loc.Name (Cap. @loc.Capacity)</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Date</label>
+                        <input class="form-control" type="date" @bind="selectedDate" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Time Slot</label>
+                        <select class="form-control" @bind="selectedTime">
+                            <option value="8:00 AM">8:00 AM</option>
+                            <option value="10:00 AM">10:00 AM</option>
+                            <option value="12:00 PM">12:00 PM</option>
+                            <option value="2:00 PM">2:00 PM</option>
+                            <option value="4:00 PM">4:00 PM</option>
+                            <option value="6:00 PM">6:00 PM</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Duration (hours)</label>
+                        <select class="form-control" @bind="selectedHours">
+                            <option value="1">1 hour</option>
+                            <option value="2">2 hours</option>
+                            <option value="3">3 hours</option>
+                            <option value="4">4 hours</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" style="max-width:250px">
+                    <label class="form-label">Priority (1 = Low, 5 = Urgent)</label>
+                    <select class="form-control" @bind="selectedPriority">
+                        <option value="1">1 — Low</option>
+                        <option value="2">2 — Normal</option>
+                        <option value="3">3 — Medium</option>
+                        <option value="4">4 — High</option>
+                        <option value="5">5 — Urgent</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" @onclick="SubmitBooking">
+                    Confirm Booking
+                </button>
+            </div>
+        </div>
+    }
+
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">
+                @(State.IsAdmin ? "All Bookings" : "My Bookings")
+            </div>
+            <span style="font-size:13px;color:var(--text-soft)">
+                @MyBookings.Count(x => x.Status != "Approved") pending
+            </span>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Student</th>
+                        <th>Location</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Hours</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        @if (State.IsAdmin)
+                        {
+                            <th>Actions</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!MyBookings.Any())
+                    {
+                        <tr>
+                            <td colspan="@(State.IsAdmin ? 9 : 8)">
+                                <div class="empty-state">
+                                    <div class="empty-text">No bookings found</div>
+                                    <div class="empty-sub">
+                                        @(State.IsLoggedIn ? "Book a room above to get started" : "Sign in to view bookings")
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var b in MyBookings)
+                        {
+                            var loc = State.GetLocation(b.LocationId);
+                            <tr>
+                                <td><strong>@b.BookingId</strong></td>
+                                <td>@b.StudentName</td>
+                                <td>@(loc?.Name ?? "Unknown")</td>
+                                <td>@b.Date</td>
+                                <td>@b.Time</td>
+                                <td>@b.Hours h</td>
+                                <td><span class="badge @GetPriorityBadge(b.Priority)">P@b.Priority</span></td>
+                                <td>
+                                    <span class="badge @(b.Status == "Approved" ? "badge-green" : "badge-amber")">
+                                        @b.Status
+                                    </span>
+                                </td>
+                                @if (State.IsAdmin)
+                                {
+                                    <td>
+                                        @if (b.Status != "Approved")
+                                        {
+                                            <button class="btn btn-success btn-sm"
+                                                    @onclick="() => ApproveBooking(b.BookingId)">
+                                                ✓ Approve
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <span style="color:var(--text-muted);font-size:12px">—</span>
+                                        }
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@code {
+    private int selectedLocation = 1;
+    private DateTime selectedDate = DateTime.Today;
+    private string selectedTime = "10:00 AM";
+    private int selectedHours = 1;
+    private int selectedPriority = 3;
+    private string message = "";
+    private string messageType = "";
+
+    private List<Booking> MyBookings => State.IsAdmin
+        ? State.Bookings
+        : State.GetBookingsForCurrentUser();
+
+    protected override void OnInitialized()
+    {
+        State.OnChange += StateHasChanged;
+
+        if (State.Locations?.Any() == true)
+        {
+            selectedLocation = State.Locations.First().Id;
+        }
+    }
+
+    public void Dispose()
+    {
+        State.OnChange -= StateHasChanged;
+    }
+
+    void SubmitBooking()
+    {
+        if (!State.IsLoggedIn)
+        {
+            SetMessage("Please sign in to book a room.", "error");
+            return;
+        }
+
+        try
+        {
+            string dateString = selectedDate.ToString("yyyy-MM-dd");
+
+            var b = State.AddBooking(selectedLocation, dateString, selectedTime, selectedHours, selectedPriority);
+            var loc = State.GetLocation(selectedLocation);
+            SetMessage($"{b.BookingId} confirmed — {loc?.Name ?? "Room"} on {dateString} at {selectedTime}", "success");
+        }
+        catch (Exception ex)
+        {
+            SetMessage(ex.Message, "error");
+        }
+    }
+
+    void ApproveBooking(string id)
+    {
+        State.ApproveBooking(id);
+        SetMessage($"{id} has been approved.", "success");
+    }
+
+    void SetMessage(string msg, string type)
+    {
+        message = msg;
+        messageType = type;
+    }
+
+    string GetPriorityBadge(int prio) =>
+        prio >= 5 ? "badge-red" :
+        prio == 4 ? "badge-amber" :
+        prio == 3 ? "badge-blue" : "badge-green";
+}

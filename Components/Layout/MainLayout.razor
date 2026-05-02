@@ -1,0 +1,296 @@
+@inherits LayoutComponentBase
+@inject AppStateService State
+@inject NavigationManager Nav
+@implements IDisposable
+
+<div class="app-shell">
+
+    <aside class="sidebar @(sidebarOpen ? "open" : "")">
+
+        <div class="sidebar-logo">
+            <div class="logo-text">
+                <span class="logo-dot"></span>CampusConnect
+            </div>
+            <div class="logo-sub">University Portal</div>
+        </div>
+
+        <div class="nav-section-label">Main</div>
+
+        <NavLink class="nav-item" href="/" Match="NavLinkMatch.All">
+             Dashboard
+        </NavLink>
+
+        <NavLink class="nav-item" href="/students">
+            Students
+        </NavLink>
+
+        <NavLink class="nav-item" href="/bookings">
+            Room Bookings
+        </NavLink>
+
+        <NavLink class="nav-item" href="/events">
+            Events
+        </NavLink>
+
+        <NavLink class="nav-item" href="/partners">
+            Find Partners
+        </NavLink>
+
+        @if (State.IsAdmin)
+        {
+            <div class="nav-section-label">Admin</div>
+            <NavLink class="nav-item" href="/admin/logs">
+                Activity Logs
+            </NavLink>
+        }
+
+        <div class="sidebar-bottom">
+            @if (State.IsLoggedIn)
+            {
+                <div class="user-pill" @onclick="HandleLogout">
+                    <div class="user-avatar">@State.CurrentUser!.Initial</div>
+                    <div>
+                        <div class="user-name">@State.CurrentUser!.Name</div>
+                        <div class="user-role">
+                            @(State.IsAdmin ? "Administrator" : "Student")
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <button class="btn btn-white" style="width:100%" @onclick="() => showLoginModal = true">
+                    Sign In
+                </button>
+            }
+        </div>
+    </aside>
+
+    <div class="main-content">
+        @Body
+    </div>
+
+</div>
+
+@if (showLoginModal)
+{
+    <div class="modal-overlay" @onclick="CloseModal">
+        <div class="modal-box" @onclick:stopPropagation>
+
+            <div style="display:flex;gap:8px;margin-bottom:20px">
+                <button class="btn @(loginTab == "login" ? "btn-primary" : "btn-ghost")" @onclick='() => loginTab = "login"'>
+                    Sign In
+                </button>
+                <button class="btn @(loginTab == "register" ? "btn-primary" : "btn-ghost")" @onclick='() => loginTab = "register"'>
+                    Register
+                </button>
+                <button class="btn @(loginTab == "admin" ? "btn-primary" : "btn-ghost")" @onclick='() => loginTab = "admin"'>
+                    Admin
+                </button>
+            </div>
+
+            @if (!string.IsNullOrEmpty(modalError))
+            {
+                <div class="alert alert-error">⚠️ @modalError</div>
+            }
+
+            @if (loginTab == "login")
+            {
+                <h3 class="modal-title">Welcome Back</h3>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input class="form-control" type="email" placeholder="you@uni.edu" @bind="loginEmail" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input class="form-control" type="password" placeholder="••••••••" @bind="loginPassword" />
+                </div>
+                <p style="font-size:12px;color:var(--text-soft);margin-bottom:16px">
+                    Demo: use any seeded student email, any password.
+                </p>
+                <button class="btn btn-primary" style="width:100%" @onclick="HandleLogin">Sign In →</button>
+            }
+            else if (loginTab == "register")
+            {
+                <h3 class="modal-title">Create Account</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input class="form-control" @bind="regName" placeholder="Jane Doe" />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Student ID</label>
+                        <input class="form-control" type="number" @bind="regId" placeholder="20001" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input class="form-control" type="email" @bind="regEmail" placeholder="you@uni.edu" />
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Department</label>
+                        <select class="form-control" @bind="regDept">
+                            <option value="CS">CS</option>
+                            <option value="EE">EE</option>
+                            <option value="Math">Math</option>
+                            <option value="Physics">Physics</option>
+                            <option value="MBA">MBA</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Year</label>
+                        <select class="form-control" @bind="regYear">
+                            <option value="1">Year 1</option>
+                            <option value="2">Year 2</option>
+                            <option value="3">Year 3</option>
+                            <option value="4">Year 4</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Free Time</label>
+                    <select class="form-control" @bind="regFreeTime">
+                        <option value="Mon 2-4pm">Mon 2–4pm</option>
+                        <option value="Tue 3-5pm">Tue 3–5pm</option>
+                        <option value="Wed 1-3pm">Wed 1–3pm</option>
+                        <option value="Thu 4-6pm">Thu 4–6pm</option>
+                        <option value="Fri 1-3pm">Fri 1–3pm</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" style="width:100%" @onclick="HandleRegister">
+                    Register & Sign In →
+                </button>
+            }
+            else
+            {
+                <h3 class="modal-title"> Admin Login</h3>
+                <div class="form-group">
+                    <label class="form-label">Admin Password</label>
+                    <input class="form-control" type="password" @bind="adminPass" placeholder="admin123" />
+                </div>
+                <p style="font-size:12px;color:var(--text-soft);margin-bottom:16px">
+                    Demo password: <code>admin123</code>
+                </p>
+                <button class="btn btn-primary" style="width:100%" @onclick="HandleAdminLogin">
+                    Enter Admin Panel →
+                </button>
+            }
+
+        </div>
+    </div>
+}
+
+<div class="toast-container">
+    @foreach (var t in toasts)
+    {
+        <div class="toast" style="border-left: 4px solid @t.Color">
+            <span>@t.Icon</span>
+            <div>
+                <div class="toast-msg">@t.Message</div>
+                @if (!string.IsNullOrEmpty(t.Sub))
+                {
+                    <div class="toast-sub">@t.Sub</div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    bool sidebarOpen = false;
+    bool showLoginModal = false;
+    string loginTab = "login";
+    string modalError = "";
+
+    string loginEmail = "", loginPassword = "";
+
+    string regName = "", regEmail = "", regDept = "CS", regFreeTime = "Mon 2-4pm";
+    int regId = 0, regYear = 1;
+
+    string adminPass = "";
+
+    record Toast(string Message, string Sub, string Color, string Icon);
+    List<Toast> toasts = new();
+
+    protected override void OnInitialized()
+    {
+        State.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        State.OnChange -= StateHasChanged;
+    }
+
+    void CloseModal()
+    {
+        showLoginModal = false;
+        modalError = "";
+    }
+
+    void HandleLogin()
+    {
+        if (State.Login(loginEmail, loginPassword))
+        {
+            ShowToast("✅ Signed in!", $"Welcome back, {State.CurrentUser!.Name}", "#10b981");
+            CloseModal();
+        }
+        else
+        {
+            modalError = "Email not found. Try a seeded student email.";
+        }
+    }
+
+    void HandleRegister()
+    {
+        if (string.IsNullOrWhiteSpace(regName) || string.IsNullOrWhiteSpace(regEmail) || regId == 0)
+        {
+            modalError = "Please fill in all required fields.";
+            return;
+        }
+        if (State.Register(regId, regName, regEmail, regDept, regYear, regFreeTime))
+        {
+            ShowToast("✅ Registered!", $"Welcome, {regName}", "#10b981");
+            CloseModal();
+        }
+        else
+        {
+            modalError = "Student ID or email already exists.";
+        }
+    }
+
+    void HandleAdminLogin()
+    {
+        if (State.AdminLogin(adminPass))
+        {
+            ShowToast("🛡️ Admin access granted", "Full control unlocked", "#2563eb");
+            CloseModal();
+        }
+        else
+        {
+            modalError = "Incorrect admin password.";
+        }
+    }
+
+    void HandleLogout()
+    {
+        State.Logout();
+        ShowToast("↩ Logged out", "See you next time!", "#64748b");
+        Nav.NavigateTo("/");
+    }
+
+    async void ShowToast(string msg, string sub, string color)
+    {
+        string icon = color.Contains("ef4444") || color.Contains("red") ? "❌"
+                    : color.Contains("10b981") || color.Contains("green") ? "✅"
+                    : color.Contains("f59e0b") ? "⚠️" : "ℹ️";
+
+        var t = new Toast(msg, sub, color, icon);
+        toasts.Add(t);
+        StateHasChanged();
+        await Task.Delay(3200);
+        toasts.Remove(t);
+        StateHasChanged();
+    }
+}

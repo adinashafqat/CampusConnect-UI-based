@@ -1,0 +1,20 @@
+@* App.razor *@
+<Router AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+        <PageTitle>Not found</PageTitle>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <div class="page-body">
+                <div class="empty-state">
+                    <div class="empty-text">Page Not Found</div>
+                    <div class="empty-sub">
+                        <a href="/" class="btn btn-primary" style="margin-top:16px">Go Home</a>
+                    </div>
+                </div>
+            </div>
+        </LayoutView>
+    </NotFound>
+</Router>
